@@ -9,3 +9,11 @@ class ProposalFields(generics.ListAPIView, viewsets.GenericViewSet):
     queryset = models.ProposalField.objects.filter(is_active=True)
     serializer_class = serializers.ProposalFieldSerializer
     pagination_class = None
+
+
+class LoanProposals(generics.CreateAPIView, viewsets.GenericViewSet):
+    """
+    Create a Personal Loan Proposal Api
+    """
+    queryset = models.LoanProposal.objects.all()
+    serializer_class = serializers.LoanProposalSerializer

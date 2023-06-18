@@ -21,9 +21,29 @@ class ProposalFieldValueSerializer(serializers.ModelSerializer):
 
 
 class LoanProposalSerializer(serializers.ModelSerializer):
+    """
+    Loan Proposal serializer for creating and list proposals
+    To up
+    """
     field_values = ProposalFieldValueSerializer(many=True)
 
     class Meta:
         model = models.LoanProposal
-        fields = ['uuid', 'field_values', 'status', 'analized_at',
+        fields = ['uuid', 'field_values', 'status', 'analyzed_at',
                   'created_at', 'updated_at']
+        read_only_fields = ['status', 'analyzed_at']
+
+    def create(self, validated_data):
+        field_values_data = validated_data.pop('field_values')
+        proposal = models.LoanProposal.objects.create(**validated_data)
+
+        for field_value_data in field_values_data:
+            models.ProposalFieldValue.objects.create(
+                proposal=proposal,
+                **field_value_data
+            )
+
+        return proposal
+
+    def update(self, instance, validated_data):
+        raise serializers.ValidationError('Update proposals not implemented')

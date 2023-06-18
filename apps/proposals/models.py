@@ -13,7 +13,7 @@ class ProposalField(GenericModel):
     Proposal fields model to sava fields used in a personal loan proposal
     """
     name = models.CharField(max_length=50)
-    slug = models.CharField(max_length=50)
+    slug = models.CharField(max_length=50, unique=True)
     required = models.BooleanField(default=True)
     type = models.CharField(
         max_length=8,
@@ -53,6 +53,9 @@ class LoanProposal(GenericModel):
 
 
 class ProposalFieldValue(GenericModel):
+    """
+    Model for save proposal fields with values introduces by the users
+    """
     field = models.ForeignKey(
         ProposalField,
         on_delete=models.CASCADE,

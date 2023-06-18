@@ -9,6 +9,7 @@ from rest_framework.schemas import get_schema_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include('apps.proposals.urls')),
 
     # Swagger documentation
     path('api/openapi/', get_schema_view(

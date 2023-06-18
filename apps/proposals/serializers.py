@@ -15,6 +15,7 @@ class ProposalFieldValueSerializer(serializers.ModelSerializer):
     field = serializers.SlugRelatedField(
         slug_field='slug',
         queryset=models.ProposalField.objects.filter(is_active=True),
+        help_text='slug of the desired field'
     )
 
     class Meta:

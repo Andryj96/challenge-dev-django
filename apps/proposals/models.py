@@ -63,6 +63,7 @@ class ProposalFieldValue(GenericModel):
     )
     value = models.CharField(
         max_length=300,
+        blank=True
     )
     proposal = models.ForeignKey(
         LoanProposal,

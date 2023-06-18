@@ -9,8 +9,8 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 
-@app.task(bind=True)
-def debug_task(self):
+@app.task
+def debug_task():
     print("Doing async task")
     time.sleep(2)
     print("Task is done")

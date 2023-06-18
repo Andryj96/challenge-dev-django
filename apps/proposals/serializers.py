@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from decimal import Decimal
 from apps.proposals import models
+from .tasks import proposal_analizer_task
 
 
 class ProposalFieldSerializer(serializers.ModelSerializer):
@@ -64,6 +65,8 @@ class LoanProposalSerializer(serializers.ModelSerializer):
                     {'Error': [f'Field "{slug}" is required']})
 
             elif len(verify_slug):
+                # Data type validations
+
                 field_type = verify_slug[0]['field'].type
                 field_value = verify_slug[0]['value']
 
@@ -120,6 +123,11 @@ class LoanProposalSerializer(serializers.ModelSerializer):
                 proposal=proposal,
                 **field_value_data
             )
+
+        # Call proposal analizer task
+        # We can also call the task on a post_save signal
+        # when the object was created.
+        proposal_analizer_task.delay(proposal.id)
 
         return proposal
 

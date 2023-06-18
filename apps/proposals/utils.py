@@ -1,7 +1,7 @@
 from .models import PROPOSAL_STATUS
 
 
-def loan_proposal_analyze(proposal_id: int) -> PROPOSAL_STATUS:
+def loan_proposal_analyzer(proposal_id: int) -> PROPOSAL_STATUS:
     """
     Analyze a given personal loan proposal
 
@@ -17,4 +17,4 @@ def loan_proposal_analyze(proposal_id: int) -> PROPOSAL_STATUS:
         PROPOSAL_STATUS
     """
 
-    return PROPOSAL_STATUS.APPROVED if proposal_id % 2 else PROPOSAL_STATUS.DENIED  # noqa
+    return PROPOSAL_STATUS.APPROVED if proposal_id % 2 == 0 else PROPOSAL_STATUS.DENIED  # noqa

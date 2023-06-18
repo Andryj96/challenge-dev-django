@@ -1,0 +1,20 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$Cue2cscqrIHyvGGTQO99SZ$1A4igJbgp9jyYlLVNp/dxV3KrP/tKNLhi9V3iKiYm0w=",
+      "last_login": null,
+      "is_superuser": true,
+      "username": "proposal_admin",
+      "first_name": "Loan Proposal",
+      "last_name": "Admin",
+      "email": "proposal_admin@test.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-06-18T01:29:12.131Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]

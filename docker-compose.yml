@@ -1,0 +1,68 @@
+version: "3.7"
+
+services:
+  postgres:
+    container_name: proposal_postgres
+    image: postgres:15-alpine
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    env_file:
+      - test.env
+    networks:
+      - backend
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: proposal_rabbitmq
+    restart: unless-stopped
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq/
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - backend
+    env_file:
+      - test.env
+
+  proposal_backend:
+    container_name: proposal_backend
+    build: .
+    command: sh /code/start.sh
+    volumes:
+      - .:/code
+      - proposal_backend-static:/code/static
+    ports:
+      - "8000:8000"
+    env_file:
+      - test.env
+    depends_on:
+      - postgres
+      - rabbitmq
+    networks:
+      - backend
+
+  celery:
+    container_name: proposal_celery
+    build: .
+    command: bash -c 'celery -A backend worker -l INFO'
+    volumes:
+      - .:/code
+    depends_on:
+      - postgres
+      - rabbitmq
+    networks:
+      - backend
+    env_file:
+      - test.env
+
+networks:
+  backend:
+
+
+volumes:
+  pg-data:
+  proposal_backend-static:
+  rabbitmq-data:

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { createProposal, getProposalFields } from "../api/proposals.api";
 import { ProposalField, CreateProposal } from "../api/proposals.interface";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 const DynamicForm = () => {
   const [proposalFields, setProposalFields] = useState<ProposalField[]>([]);
@@ -46,10 +48,37 @@ const DynamicForm = () => {
       field_values: arrayValues,
     };
     try {
-      const response = await createProposal(data);
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
+      await createProposal(data);
+
+      toast.success("Proposal Created!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+
+      // eslint-disable-next-line
+    } catch (error: AxiosError | any) {
+      toast.error(
+        <div>
+          <h3>Error Ocurred!</h3>
+          <p>
+            {error.response?.data
+              ? (Object.values(error.response.data)[0] as string)
+              : error.message}
+          </p>
+        </div>,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      );
     }
   };
 
@@ -64,7 +93,6 @@ const DynamicForm = () => {
                 type="checkbox"
                 id={field.slug}
                 name={field.slug}
-                checked={formValues[field.slug] === "True"}
                 onChange={handleInputChange}
               />
               <label className="font-bold mb-2" htmlFor={field.slug}>
@@ -81,7 +109,6 @@ const DynamicForm = () => {
                 type={field.type}
                 id={field.slug}
                 name={field.slug}
-                value={formValues[field.slug] || ""}
                 onChange={handleInputChange}
                 required={field.required}
               />

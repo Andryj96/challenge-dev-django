@@ -69,7 +69,7 @@ class LoanProposalSerializer(serializers.ModelSerializer):
                 # Data type validations
 
                 field_type = verify_slug[0]['field'].type
-                field_value = verify_slug[0]['value']
+                field_value = verify_slug[0].get('value', '')
 
                 if not field_value and slug in required_fields:
                     raise serializers.ValidationError(

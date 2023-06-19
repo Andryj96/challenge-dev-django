@@ -1,5 +1,6 @@
-import "./App.css";
 import DynamicForm from "./components/DynamicForm";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -10,6 +11,11 @@ function App() {
       <div className="flex text-left w-1/2 m-auto justify-center  ">
         <DynamicForm />
       </div>
+      <ToastContainer
+        style={{
+          "--toastify-icon-color-success": "#456acf",
+        }}
+      />
     </>
   );
 }

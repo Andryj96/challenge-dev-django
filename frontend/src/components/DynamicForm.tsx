@@ -161,7 +161,7 @@ const DynamicForm = () => {
       ))}
 
       <button
-        className="py-3 w-full  lg:py-4 px-12 lg:px-16 text-white-500 font-semibold rounded-lg bg-blue-500 hover:shadow-blue-md transition-all outline-none"
+        className="py-3 w-full px-16 text-white-500 font-semibold rounded-lg bg-blue-500 hover:shadow-blue-md transition-all outline-none"
         type="submit"
         disabled={isLoading}
       >

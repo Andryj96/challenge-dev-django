@@ -11,7 +11,7 @@ services:
     env_file:
       - test.env
     networks:
-      - backend
+      - proposal_dev
 
   rabbitmq:
     image: rabbitmq:3.12-management
@@ -23,16 +23,16 @@ services:
       - "15672:15672"
       # - "5672:5672"  # only for dev
     networks:
-      - backend
+      - proposal_dev
     env_file:
       - test.env
 
   proposal_backend:
     container_name: proposal_backend
-    build: .
+    build:
+      context: ./backend
     command: sh /code/start.sh
-    volumes:
-      - .:/code
+
       - proposal_backend-static:/code/static
     ports:
       - "8000:8000"
@@ -42,24 +42,37 @@ services:
       - postgres
       - rabbitmq
     networks:
-      - backend
+      - proposal_dev
 
   celery:
     container_name: proposal_celery
-    build: .
+    build:
+      context: ./backend
     command: bash -c 'celery -A backend worker -l INFO'
-    volumes:
-      - .:/code
+
     depends_on:
       - postgres
       - rabbitmq
     networks:
-      - backend
+      - proposal_dev
     env_file:
       - test.env
 
+  proposal_frontend:
+    container_name: proposal_frontend
+    build:
+      context: ./frontend
+    ports:
+      - "8080:8080"
+    env_file:
+      - test.env
+    depends_on:
+      - proposal_backend
+    networks:
+      - proposal_dev
+
 networks:
-  backend:
+  proposal_dev:
 
 
 volumes:

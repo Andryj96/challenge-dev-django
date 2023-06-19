@@ -2,20 +2,55 @@ import React, { useState, useEffect } from "react";
 import { createProposal, getProposalFields } from "../api/proposals.api";
 import { ProposalField, CreateProposal } from "../api/proposals.interface";
 import { toast } from "react-toastify";
+import { FaSpinner } from "react-icons/fa";
+// eslint-disable-next-line
 import { AxiosError } from "axios";
 
 const DynamicForm = () => {
   const [proposalFields, setProposalFields] = useState<ProposalField[]>([]);
   const [formValues, setFormValues] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // Get proposal fields from api
     async function getProposalFieldsFromApi() {
+      const initialFormValues: Record<string, string> = {};
+
       try {
         const response = await getProposalFields();
         setProposalFields(response.data);
-      } catch (error) {
-        console.log(error);
+
+        response.data.forEach((field) => {
+          if (field.type === "checkbox") {
+            initialFormValues[field.slug] = "False";
+          } else if (field.type === "number") {
+            initialFormValues[field.slug] = "0";
+          } else {
+            initialFormValues[field.slug] = "";
+          }
+        });
+        setFormValues(initialFormValues);
+
+        // eslint-disable-next-line
+      } catch (error: AxiosError | any) {
+        toast.error(
+          <div>
+            <h3>Error Ocurred!</h3>
+            <p>
+              {error.response?.data
+                ? (Object.values(error.response.data)[0] as string)
+                : error.message}
+            </p>
+          </div>,
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          }
+        );
       }
     }
     getProposalFieldsFromApi();
@@ -35,6 +70,8 @@ const DynamicForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    setIsLoading(true);
 
     const arrayValues = proposalFields.map((field) => {
       return {
@@ -79,6 +116,10 @@ const DynamicForm = () => {
           draggable: true,
         }
       );
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 800);
     }
   };
 
@@ -93,6 +134,7 @@ const DynamicForm = () => {
                 type="checkbox"
                 id={field.slug}
                 name={field.slug}
+                checked={formValues[field.slug] === "True"}
                 onChange={handleInputChange}
               />
               <label className="font-bold mb-2" htmlFor={field.slug}>
@@ -110,6 +152,7 @@ const DynamicForm = () => {
                 id={field.slug}
                 name={field.slug}
                 onChange={handleInputChange}
+                value={formValues[field.slug]}
                 required={field.required}
               />
             </>
@@ -118,10 +161,15 @@ const DynamicForm = () => {
       ))}
 
       <button
-        className="py-3 lg:py-4 px-12 lg:px-16 text-white-500 font-semibold rounded-lg bg-blue-500 hover:shadow-blue-md transition-all outline-none"
+        className="py-3 w-full  lg:py-4 px-12 lg:px-16 text-white-500 font-semibold rounded-lg bg-blue-500 hover:shadow-blue-md transition-all outline-none"
         type="submit"
+        disabled={isLoading}
       >
-        Create Loan Proposal
+        {isLoading ? (
+          <FaSpinner className="my-1 mx-auto" color="white" />
+        ) : (
+          "Create Loan Proposal"
+        )}
       </button>
     </form>
   );

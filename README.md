@@ -39,3 +39,9 @@ This project provide an API for managing loan proposals. It offers the following
 ## Test command for backend
 
 `docker compose run proposal_backend python3 manage.py test apps`
+
+## Notes
+
+- The frontend is a simple form interface that generates the fields based on what it collects from the fields created in the API.
+- We used a single 'main' branch for the development of the project because it was a simple task and for testing purposes, which is not recommended to work in larger and production environments, should manage one or several development branches and gradually incorporate the changes. already tested to the main branch.
+- The API has unit and integration tests to ensure correct operation and validation of inputs and different cases.

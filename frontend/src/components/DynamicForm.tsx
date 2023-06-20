@@ -125,6 +125,12 @@ const DynamicForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="p-10">
+      <h3
+        className="text-center py-10 text-xl"
+        hidden={!!proposalFields.length}
+      >
+        There are no proposal fields available to fill out
+      </h3>
       {proposalFields.map((field, key) => (
         <div key={key} className="mb-4">
           {field.type === "checkbox" ? (
@@ -159,11 +165,10 @@ const DynamicForm = () => {
           )}
         </div>
       ))}
-
       <button
         className="py-3 w-full px-16 text-white-500 font-semibold rounded-lg bg-blue-500 hover:shadow-blue-md transition-all outline-none"
         type="submit"
-        disabled={isLoading}
+        disabled={isLoading || !proposalFields.length}
       >
         {isLoading ? (
           <FaSpinner className="my-1 mx-auto" color="white" />

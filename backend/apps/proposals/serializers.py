@@ -39,6 +39,11 @@ class LoanProposalSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         field_values_data = attrs.get('field_values', [])
 
+        # do not allow a void proposal
+        if not len(field_values_data):
+            raise serializers.ValidationError(
+                {'Error': ['You cannot send an empty proposal']})
+
         # get defined field
         defined_fields = models.ProposalField.objects.filter(
             is_active=True,

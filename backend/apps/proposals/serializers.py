@@ -85,7 +85,7 @@ class LoanProposalSerializer(serializers.ModelSerializer):
                         Decimal(field_value)
                     except Exception:
                         raise serializers.ValidationError(
-                            {'Error': [f'Field  "{slug}" must be Decimal number, ex: "50.00"']})  # noqa
+                            {'Error': [f'Field  "{slug}" must be an Integer or Decimal number, ex: "50 or 50.00"']})  # noqa
 
                 elif field_type == models.FIELD_TYPES.TEXT and \
                         not isinstance(field_value, str):  # noqa

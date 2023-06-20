@@ -224,4 +224,54 @@ class ProposalAPITest(TestCase):
 
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('must be Decimal number', response.data['Error'][0])
+        self.assertIn(
+            'must be an Integer or Decimal number',
+            response.data['Error'][0]
+        )
+
+    def test_try_create_proposal_with_invalid_checkbox_field(self):
+        """
+        Try to create a loan proposal with invalid field type
+        Should return bad request 400
+
+        """
+        data = dict(
+            field_values=[
+                {
+                    "field": "name",
+                    "value": "Test"
+                },
+                {
+                    "field": "cpf",
+                    "value": "123"
+                },
+                {
+                    "field": "is_married",
+                    "value": ""
+                },
+                {
+                    "field": "loan_value",
+                    "value": "100.00"
+                }
+            ]
+        )
+
+        response = self.client.post(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('must be True or False', response.data['Error'][0])
+
+    def test_try_empty_proposal(self):
+        """
+        Try to create a loan proposal with not fields
+        Should return bad request 400
+
+        """
+        ProposalField.objects.all().delete()
+        data = dict(field_values=[])
+
+        response = self.client.post(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(
+            'cannot send an empty proposal',
+            response.data['Error'][0]
+        )
